@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import com.me.net.PostRequest;
 import com.me.net.PostRequestWithProxy;
+import org.apache.http.conn.ConnectTimeoutException;
 
 public abstract class BaseModle extends Thread {
 
@@ -127,8 +129,14 @@ public abstract class BaseModle extends Thread {
 
 		String str = null;
 		try {
-			str = PostRequestWithProxy.get("http://httpbin.org/ip", new HashMap<String, String>(), ip,
-					Integer.parseInt(port), "http");
+			try {
+				str = PostRequestWithProxy.get("http://httpbin.org/ip", new HashMap<String, String>(), ip,
+						Integer.parseInt(port), "http");
+			} catch (SocketTimeoutException e) {
+				e.printStackTrace();
+			} catch (ConnectTimeoutException e) {
+				e.printStackTrace();
+			}
 			System.out.println("真实ip为：" + str);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

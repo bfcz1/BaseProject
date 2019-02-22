@@ -20,7 +20,7 @@ public class ExcelOutHandler {
 		// 文件名
 		String exportFileName = outTag+"数据_" + now + ".xlsx";
 		// 表头
-		 String[] cellTitle = {"店铺id","店铺名称 ","店铺首页链接","商品总数","主营类目",outTag+"销量",outTag+"销售额"};
+		 String[] cellTitle = {"全网代理超时时间","全网代理延迟","芝麻代理超时时间","芝麻代理延迟"};
 		// 声明一个工作薄
 		XSSFWorkbook workBook = null;
 		workBook = new XSSFWorkbook();
@@ -29,9 +29,9 @@ public class ExcelOutHandler {
 		workBook.setSheetName(0, "sheet1");
 		// 创建表格标题行 第一行
 		 XSSFRow titleRow = sheet.createRow(0);
-		 for(int i=0;i<cellTitle.length;i++){
-		 titleRow.createCell(i).setCellValue(cellTitle[i]);
-		 }
+//		 for(int i=0;i<cellTitle.length;i++){
+//		 titleRow.createCell(i).setCellValue(cellTitle[i]);
+//		 }
 		// 插入需导出的数据
 		for (int i = 1; i < list.size()+1; i++) {
 			XSSFRow row = sheet.createRow(i);

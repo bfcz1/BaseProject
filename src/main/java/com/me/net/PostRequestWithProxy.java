@@ -3,6 +3,7 @@ package com.me.net;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
+import java.rmi.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -27,7 +29,7 @@ import com.mysql.jdbc.StringUtils;
 public class PostRequestWithProxy {
 	
 	//传入代理即可
-	public static String get(String url, Map<String, String> head, String proxyIp, int port, String proxyProtocol) {
+	public static String get(String url, Map<String, String> head, String proxyIp, int port, String proxyProtocol) throws SocketTimeoutException, ConnectTimeoutException {
 		String resp = "";
 		// 创建HttpClientBuilder
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
@@ -37,7 +39,7 @@ public class PostRequestWithProxy {
 		// HttpHost target = new HttpHost("119.75.213.61", 443,"https");
 		// 依次是代理地址，代理端口号，协议类型
 		HttpHost proxy = new HttpHost(proxyIp, port, proxyProtocol);
-		RequestConfig config = RequestConfig.custom().setProxy(proxy).setConnectTimeout(8000).setSocketTimeout(8000)
+		RequestConfig config = RequestConfig.custom().setProxy(proxy).setConnectionRequestTimeout(8000).setConnectTimeout(8000).setSocketTimeout(8000)
 				.build();
 		HttpGet requestGet = new HttpGet(url);
 		requestGet.setConfig(config);
@@ -50,9 +52,7 @@ public class PostRequestWithProxy {
 		try {
 			response = closeableHttpClient.execute(requestGet);
 			resp = EntityUtils.toString(response.getEntity());
-		} catch (SocketTimeoutException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
+		}catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
